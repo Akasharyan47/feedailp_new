@@ -1,0 +1,186 @@
+
+[
+   {
+     "id": 1,
+     "user": "User1",
+     "rating": 4,
+     "comment": "This is a detailed comment with 20 lines of text. It aims to provide a thorough evaluation of the product, highlighting various aspects such as usability, design, performance, and overall satisfaction. Each line contributes to a comprehensive review, covering different aspects of the user experience. The author expresses their thoughts on the UI design, responsiveness, and the overall impression of the product. The comment also touches upon specific features, potential areas for improvement, and suggestions for future enhancements. In summary, it's an in-depth analysis that adds valuable insights for potential users and the company alike.",
+     "date": "2022-01-20",
+     "company": "Company A",
+     "product": "Product X"
+   },
+   {
+     "id": 2,
+     "user": "User2",
+     "rating": 3,
+     "comment": "Another extensive comment with 20 lines of text. It delves into various aspects of the product, offering a nuanced perspective. The author reflects on the product's responsiveness, user-friendliness on mobile devices, and loading times. They also share thoughts on the overall experience and suggestions for improvement. The comment provides constructive feedback, highlighting both positive aspects and areas that could be enhanced. Overall, it's a detailed and thoughtful evaluation that adds depth to the user reviews.",
+     "date": "2022-01-19",
+     "company": "Company B",
+     "product": "Product Y"
+   },
+   {
+     "id": 3,
+     "user": "User3",
+     "rating": 5,
+     "comment": "Excellent product! The simplicity of the design is what sets it apart. Navigating through the features feels intuitive, and the sleek, modern look is a major plus. I've been using it for a while now and couldn't be happier.",
+     "date": "2022-01-18",
+     "company": "Company C",
+     "product": "Product Z"
+   },
+   {
+     "id": 4,
+     "user": "User4",
+     "rating": 2,
+     "comment": "Not satisfied with the service. Customer support was unhelpful, and I faced technical issues. The overall quality of service needs improvement. Would not recommend to others.",
+     "date": "2022-01-17",
+     "company": "Company D",
+     "product": "Product W"
+   },
+   {
+     "id": 5,
+     "user": "User5",
+     "rating": 4,
+     "comment": "Impressed with the overall performance. The application is feature-rich, and the regular updates enhance the user experience. The value for money is excellent. Recommended!",
+     "date": "2022-01-16",
+     "company": "Company E",
+     "product": "Product V"
+   },
+   {
+     "id": 6,
+     "user": "User6",
+     "rating": 5,
+     "comment": "Outstanding! The attention to detail in the design is commendable. Using the product is a breeze, and it meets all my expectations. Highly recommended for its simplicity and functionality.",
+     "date": "2022-01-15",
+     "company": "Company F",
+     "product": "Product U"
+   },
+   {
+     "id": 7,
+     "user": "User7",
+     "rating": 3,
+     "comment": "Decent product, but some improvements needed. The user interface could be more intuitive, and additional features would enhance the overall experience. Average value for money.",
+     "date": "2022-01-14",
+     "company": "Company G",
+     "product": "Product T"
+   },
+    
+   {
+     "id": 8,
+     "user": "User8",
+     "rating": 4,
+     "comment": "Satisfied with the purchase. The product exceeded expectations, offering a seamless user experience. The customer service was responsive, addressing queries promptly. Good value for money.",
+     "date": "2022-01-13",
+     "company": "Company H",
+     "product": "Product S"
+   },
+   {
+     "id": 9,
+     "user": "User9",
+     "rating": 2,
+     "comment": "Disappointed with the product. Experienced issues with functionality and customer support. Lack of timely updates and improvements. Would not recommend to others.",
+     "date": "2022-01-12",
+     "company": "Company I",
+     "product": "Product R"
+   },
+   {
+     "id": 10,
+     "user": "User10",
+     "rating": 5,
+     "comment": "Exceptional service! The product is reliable, with a user-friendly interface. The company provides excellent customer support, promptly addressing any concerns. Highly recommended for its quality and efficiency.",
+     "date": "2022-01-11",
+     "company": "Company J",
+     "product": "Product Q"
+   },
+   {
+     "id": 11,
+     "user": "User11",
+     "rating": 3,
+     "comment": "Average product. The performance is satisfactory, but there is room for improvement. Some features are lacking, and the user interface could be more intuitive. Fair value for money.",
+     "date": "2022-01-10",
+     "company": "Company K",
+     "product": "Product P"
+   },
+   {
+     "id": 12,
+     "user": "User12",
+     "rating": 4,
+     "comment": "Good experience overall. The product meets expectations, with a user-friendly design. Prompt delivery and clear instructions. Would consider purchasing from this company again.",
+     "date": "2022-01-09",
+     "company": "Company L",
+     "product": "Product O"
+   },
+   {
+     "id": 13,
+     "user": "User13",
+     "rating": 5,
+     "comment": "Highly satisfied! The product is exceptional, providing a seamless experience. The company's attention to detail and commitment to customer satisfaction are commendable. Definitely recommended.",
+     "date": "2022-01-08",
+     "company": "Company M",
+     "product": "Product N"
+   },
+   {
+      "id": 14,
+      "user": "User14",
+      "rating": 5,
+      "comment": "Excellent product! The simplicity of the design is what sets it apart. Navigating through the features feels intuitive, and the sleek, modern look is a major plus. I've been using it for a while now and couldn't be happier.",
+      "date": "2022-01-18",
+      "company": "Company C",
+      "product": "Product Z"
+    },
+    {
+      "id": 15,
+      "user": "User15",
+      "rating": 2,
+      "comment": "Not satisfied with the service. Customer support was unhelpful, and I faced technical issues. The overall quality of service needs improvement. Would not recommend to others.",
+      "date": "2022-01-17",
+      "company": "Company D",
+      "product": "Product W"
+    },
+    {
+      "id": 16,
+      "user": "User16",
+      "rating": 4,
+      "comment": "Impressed with the overall performance. The application is feature-rich, and the regular updates enhance the user experience. The value for money is excellent. Recommended!",
+      "date": "2022-01-16",
+      "company": "Company E",
+      "product": "Product V"
+    },
+    {
+      "id": 17,
+      "user": "User17",
+      "rating": 5,
+      "comment": "Outstanding! The attention to detail in the design is commendable. Using the product is a breeze, and it meets all my expectations. Highly recommended for its simplicity and functionality.",
+      "date": "2022-01-15",
+      "company": "Company F",
+      "product": "Product U"
+    },
+    {
+      "id": 18,
+      "user": "User18",
+      "rating": 3,
+      "comment": "Decent product, but some improvements needed. The user interface could be more intuitive, and additional features would enhance the overall experience. Average value for money.",
+      "date": "2022-01-14",
+      "company": "Company G",
+      "product": "Product T"
+    },
+     
+    {
+      "id": 19,
+      "user": "User19",
+      "rating": 4,
+      "comment": "Satisfied with the purchase. The product exceeded expectations, offering a seamless user experience. The customer service was responsive, addressing queries promptly. Good value for money.",
+      "date": "2022-01-13",
+      "company": "Company H",
+      "product": "Product S"
+    },
+    {
+      "id": 20,
+      "user": "User20",
+      "rating": 2,
+      "comment": "Disappointed with the product. Experienced issues with functionality and customer support. Lack of timely updates and improvements. Would not recommend to others.",
+      "date": "2022-01-12",
+      "company": "Company I",
+      "product": "Product R"
+    }
+ ]
+ 
