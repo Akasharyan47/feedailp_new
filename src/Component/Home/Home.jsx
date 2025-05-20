@@ -4,13 +4,14 @@ import { Box } from '@mui/material';
 
 const Home = () => {
 
-  console.log("hi")
+  console.log("hit")
   return (
     <Box>
       <div className='main'> 
         <div style={{height:"60px"}}></div>
         <MainBanner />
       </div>
+
     </Box>
   );
 } 
