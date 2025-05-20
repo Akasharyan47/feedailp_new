@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 const Home = () => {
 
-  console.log("hit")
+  console.log("hitcf")
   return (
     <Box>
       <div className='main'> 
