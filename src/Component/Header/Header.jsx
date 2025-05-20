@@ -5,8 +5,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { Link } from 'react-router-dom'; 
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebaseConfig';
 import Cookies from 'js-cookie';
@@ -17,9 +16,8 @@ const Header = () => {
   const [username, setUsername] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cookies, removeCookie] = useCookies(['user']);
-
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+ console.log(username)
   useEffect(() => {
     const fullName = Cookies.get("displayName");
     if (fullName) {

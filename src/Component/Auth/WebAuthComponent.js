@@ -97,7 +97,7 @@ const WebAuthComponent = () => {
     minHeight: "36px", // control button height
   };
 
-
+ console.log(userDetails)
   // Placeholder handlers
   const handleMicrosoftLogin = () => { };
   const handleGithubLogin = () => { };

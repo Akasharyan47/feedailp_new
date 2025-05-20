@@ -5,8 +5,7 @@ import Modal from "react-modal";
 import WebAuthComponent from "./WebAuthComponent.js";
 import MobileAuthComponent from "./MobileAuthComponent.js"
 import { Box, Container } from "@mui/system";
-import CloseIcon from '@mui/icons-material/Close';
-import { useCookies } from 'react-cookie';
+import CloseIcon from '@mui/icons-material/Close'; 
 import PropTypes from 'prop-types';
 
 Modal.setAppElement("#root");
