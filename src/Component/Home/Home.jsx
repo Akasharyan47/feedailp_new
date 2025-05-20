@@ -3,6 +3,8 @@ import MainBanner from './BannerComp/Banner';
 import { Box } from '@mui/material';
 
 const Home = () => {
+
+  console.log("hi")
   return (
     <Box>
       <div className='main'> 
