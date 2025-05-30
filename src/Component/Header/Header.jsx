@@ -47,7 +47,7 @@ const Header = () => {
 
     try {
       await signOut(auth);
-      ["uid", "email", "displayName", "photoURL", "accessToken"].forEach((key) =>
+      ["uid", "email", "displayName", "photoURL", "accessToken","fduser"].forEach((key) =>
         Cookies.remove(key)
       );
       alert("You have been logged out.");

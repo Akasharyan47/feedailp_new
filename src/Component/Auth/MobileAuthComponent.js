@@ -85,10 +85,11 @@ const MobileAuthComponent = () => {
     Cookies.set("displayName", user.displayName, { expires: 1 });
     Cookies.set("photoURL", user.photoURL, { expires: 1 });
     Cookies.set("accessToken", token, { expires: 1 });
+       Cookies.set("fduser", "success", { expires: 1 });
   };
 
   const clearCookies = () => {
-    ["uid", "email", "displayName", "photoURL", "accessToken"].forEach((key) =>
+    ["uid", "email", "displayName", "photoURL", "accessToken","fduser"].forEach((key) =>
       Cookies.remove(key)
     );
   };

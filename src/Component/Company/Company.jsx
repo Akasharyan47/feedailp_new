@@ -1,89 +1,63 @@
 import React, { useState, useEffect } from "react";
 import {
-  Select,
-  MenuItem,
   Grid,
-  FormControl, 
-  Autocomplete, 
+  FormControl,
+  Autocomplete,
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 
-const apiUrl = "https://4wym6p3cli.execute-api.ap-south-1.amazonaws.com/dev/";
+const API_BASE_URL = "http://127.0.0.1:5000/api";
 
 export const DropdownWithCategories = ({ onDataSelected }) => {
   const [serviceTypes, setServiceTypes] = useState([]);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
-  const [selectedServiceType, setSelectedServiceType] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedServiceType, setSelectedServiceType] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    fetch(apiUrl + "service_types", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.status === "success") {
-          setServiceTypes(data.data);
-        } else {
-          console.error("Failed to fetch service types:", data ? data.error : "Unknown error");
+    axios
+      .get(`${API_BASE_URL}/service-types`)
+      .then((res) => {
+        if (res.data.status === "success") {
+          setServiceTypes(res.data.data);
         }
       })
-      .catch((error) => console.error("Error fetching service types:", error));
+      .catch((err) => console.error("Error fetching service types:", err));
   }, []);
-  
 
   useEffect(() => {
-    if (selectedServiceType) {
-      fetch(apiUrl + "brands", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ service_type_id: selectedServiceType }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setBrands(data.data);
-          } else {
-            console.error("Failed to fetch brands:", data.error);
+    if (selectedServiceType?.service_type_id) {
+      axios
+        .get(`${API_BASE_URL}/brands/${selectedServiceType.service_type_id}`)
+        .then((res) => {
+          if (res.data.status === "success") {
+            setBrands(res.data.data);
+            setSelectedBrand(null);
+            setProducts([]);
+            setSelectedProduct(null);
           }
         })
-        .catch((error) => console.error("Error fetching brands:", error));
+        .catch((err) => console.error("Error fetching brands:", err));
     }
   }, [selectedServiceType]);
 
   useEffect(() => {
-    // Fetch products based on selected service type and brand using POST
-    if (selectedServiceType && selectedBrand) {
-      fetch(apiUrl + "products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service_type_id: selectedServiceType,
-          brand_id: selectedBrand,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setProducts(data.data);
-          } else {
-            console.error("Failed to fetch products:", data.error);
+    if (selectedBrand?.brand_id) {
+      axios
+        .get(`${API_BASE_URL}/products/${selectedBrand.brand_id}`)
+        .then((res) => {
+          if (res.data.status === "success") {
+            setProducts(res.data.data);
+            setSelectedProduct(null);
           }
         })
-        .catch((error) => console.error("Error fetching products:", error));
+        .catch((err) => console.error("Error fetching products:", err));
     }
-  }, [selectedServiceType, selectedBrand]);
+  }, [selectedBrand]);
 
   useEffect(() => {
     if (selectedServiceType && selectedBrand && selectedProduct) {
@@ -93,167 +67,142 @@ export const DropdownWithCategories = ({ onDataSelected }) => {
         product: selectedProduct,
       };
       onDataSelected(selectedData);
-      console.log(selectedData);   
+      console.log("Selected Data:", selectedData);
     }
   }, [selectedServiceType, selectedBrand, selectedProduct, onDataSelected]);
-  
- 
+
   return (
     <>
-      <Grid 
-        pt={2}
-        container
-        rowSpacing={0} 
-        justifyContent="space-evenly"
-       // columnSpacing={{ xs: 0, sm: 0, md: 2 }}
-      >
-       <Grid width={{  md: '10%', sm:"20%" }}></Grid>
- 
-        <Grid item xs={5} sm={4}    >
-        <Typography  fontSize= "0.9rem"
-                sx={{ color: "whitesmoke" }}>
+      <Grid pt={2} container justifyContent="space-evenly">
+        <Grid width={{ md: "10%", sm: "20%" }} />
+
+        <Grid item xs={5} sm={4}>
+          <Typography fontSize="0.9rem" sx={{ color: "whitesmoke" }}>
             * Select Service Type
           </Typography>
           <FormControl required fullWidth size="small">
-            <Select
+            <Autocomplete
+               size="small"
+                  fullWidth
+              options={serviceTypes}
+              getOptionLabel={(option) => option.service_type_nm || ""}
+              value={selectedServiceType}
+              onChange={(event, newValue) => setSelectedServiceType(newValue)}
+              isOptionEqualToValue={(option, value) =>
+                option.service_type_id === value?.service_type_id
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Service Type"
+                  variant="outlined"
+                />
+              )}
               sx={{
+                borderRadius: "4px",
                 backgroundColor: "whitesmoke",
-                "& .MuiSelect-icon": {
-                  color: "#006fbe",
-                  fontSize: 30,
+                "& .MuiAutocomplete-popupIndicator": { color: "#006fbe" },
+                "& .MuiInputLabel-root": {
+                  color: "#adadad",
+                  fontSize: "0.9rem",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                color: "white", // Focused label color
+                fontSize: "0rem",
+              },
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "whitesmoke",
+
                 },
               }}
-              labelId="serviceTypeLabel"
-              id="serviceTypeSelect"
-              value={selectedServiceType}
-              onChange={(e) => setSelectedServiceType(e.target.value)}
-            >
-              <MenuItem value=" " disabled>
-                Select Service Type 
-              </MenuItem>
-              {serviceTypes.map((serviceType) => (
-                <MenuItem
-                  key={serviceType.service_type_id}
-                  value={serviceType.service_type_id}
-                >
-                  {serviceType.service_type_nm}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </FormControl>
         </Grid>
 
-        <Grid item xs={5} sm={4}    >
-        <Typography  fontSize= "0.9rem"
-                sx={{ color: "whitesmoke" }}>
+        <Grid item xs={5} sm={4}>
+          <Typography fontSize="0.9rem" sx={{ color: "whitesmoke" }}>
             * Company
           </Typography>
           <Autocomplete
             size="small"
+            fullWidth
+            options={brands}
+            getOptionLabel={(option) => option.brand_name || ""}
+            value={selectedBrand}
+            onChange={(event, newValue) => setSelectedBrand(newValue)}
+            isOptionEqualToValue={(option, value) =>
+              option.brand_id === value?.brand_id
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Brand" variant="outlined" />
+            )}
+            disabled={!brands.length}
             sx={{
               borderRadius: "4px",
               backgroundColor: "whitesmoke",
-              "& .MuiAutocomplete-popupIndicator": {
-                color: "#006fbe",
-                padding: "0",
+              "& .MuiAutocomplete-popupIndicator": { color: "#006fbe" },
+              "& .MuiInputLabel-root": {
+                color: "#adadad",
+                fontSize: "0.9rem",
               },
-              "& .css-i4bv87-MuiSvgIcon-root": {
-                fontSize: "1.9rem",
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "white", // Focused label color
+                fontSize: "0rem",
+              },
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "whitesmoke",
               },
             }}
-            fullWidth
-            options={brands}
-            getOptionLabel={(option) => option.brand_name}
-            value={
-              brands.find((brand) => brand.brand_id === selectedBrand) || null
-            }
-            onChange={(event, newValue) =>
-              setSelectedBrand(newValue ? newValue.brand_id : "")
-            }
-            renderInput={(params) => (
-              <TextField
-                size="small"
-                {...params}
-                variant="outlined"
-                sx={{
-                  margin: "0",
-                  size: "small",
-                }}
-              />
-            )}
-          /> 
+          />
         </Grid>
-
-
-        {/* <Autocomplete
-          fullWidth
-          options={products}
-          getOptionLabel={(option) => option.product_nm}
-          value={products.find(product => product.product_id === selectedProduct) || null}
-          onChange={(event, newValue) => setSelectedProduct(newValue ? newValue.product_id : '')}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Product"
-              variant="outlined"
-            />
-          )}
-        />  */}
       </Grid>
 
-         <Grid item pt={4}  container rowSpacing={0}  
-             xs={5} sm={4}   
-             marginRight={{xs:"4%",sm:"3%", md:"6%" }} 
-            style={{float:"right"}} >  
-
-           <Grid item xs={12}  >
-           <Typography  fontSize= "0.9rem"
-                sx={{ color: "whitesmoke" }}
-            >
-              * Product
-            </Typography>
-            <Autocomplete
-              size="small"
-              sx={{
-                borderRadius: "4px",
+      <Grid
+        item
+        pt={4}
+        container
+        xs={5}
+        sm={4}
+        style={{ float: "right" }}
+        marginRight={{ xs: "4%", sm: "3%", md: "6%" }}
+      >
+        <Grid item xs={12}>
+          <Typography fontSize="0.9rem" sx={{ color: "whitesmoke" }}>
+            * Product
+          </Typography>
+          <Autocomplete
+            size="small"
+            fullWidth
+            options={products}
+            getOptionLabel={(option) => option.product_nm || ""}
+            value={selectedProduct}
+            onChange={(event, newValue) => setSelectedProduct(newValue)}
+            isOptionEqualToValue={(option, value) =>
+              option.product_id === value?.product_id
+            }
+            renderInput={(params) => (
+              <TextField {...params} variant="outlined" label="Product" />
+            )}
+            sx={{
+              borderRadius: "4px",
+              backgroundColor: "whitesmoke",
+              "& .MuiAutocomplete-popupIndicator": { color: "#006fbe" }, 
+              "& .MuiInputLabel-root": {
+                color: "#adadad",
+                fontSize: "0.9rem",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "white", // Focused label color
+                fontSize: "0rem",
+              },
+              "& .MuiOutlinedInput-root": {
                 backgroundColor: "whitesmoke",
-                "& .MuiAutocomplete-popupIndicator": {
-                  color: "#006fbe",
-                  padding: "0",
-                },
-                "& .css-i4bv87-MuiSvgIcon-root": {
-                  fontSize: "1.9rem",
-                },
-              }}
-              fullWidth
-              options={products}
-              getOptionLabel={(option) => option.product_nm}
-              value={
-                products.find(
-                  (product) => product.product_id === selectedProduct
-                ) || null
-              }
-              onChange={(event, newValue) =>
-                setSelectedProduct(newValue ? newValue.product_id : "")
-              }
-              renderInput={(params) => (
-                <TextField
-                  size="small"
-                  {...params}
-                  variant="outlined"
-                  sx={{
-                    margin: "0",
-                    size: "small",
-                  }}
-                />
-              )}
-            />
-
-         </Grid> 
-          </Grid>
+              }, 
+            }}
+            disabled={!products.length}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
- 
-
- 
