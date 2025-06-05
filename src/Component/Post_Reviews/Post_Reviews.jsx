@@ -72,7 +72,14 @@ const PostReviews = () => {
 
  
   const submitForm = () => {
-    if (  yesnodata) {
+     if (!selectedProduct) {
+      showMessage("Please select product");
+    } else if (!district) {
+      setDistrictError("Please enter a pincode");
+      showMessage("Please enter a pincode");
+    } else if (!rating) {
+      showMessage("Please provide a rating");
+    } else if (  yesnodata) {
       const Data = {
          product: selectedProduct,
          District: district,
