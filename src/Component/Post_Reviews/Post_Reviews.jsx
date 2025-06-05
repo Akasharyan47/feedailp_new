@@ -54,7 +54,7 @@ const PostReviews = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
-  };
+  }; 
   const closeModal = () => {
     setIsModalOpen(false); 
     // window.location.href = "/";
