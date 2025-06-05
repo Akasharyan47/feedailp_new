@@ -17,7 +17,7 @@ import { DropdownWithCategories } from "../Company/Company";
 import GmailAddressModal from "../Auth/index";
 import Image_post_review from "../../IMAGE/postReview/Image_post_review.png";
 import Cookies from "js-cookie";
-
+ 
 import shield_610309 from "../../IMAGE/postReview/shield_610309.png";
 
 const PostReviews = () => {
@@ -56,8 +56,7 @@ const PostReviews = () => {
     setIsModalOpen(true);
   };
   const closeModal = () => {
-    setIsModalOpen(false);
-    // Redirect to homepage only after success and close modal
+    setIsModalOpen(false); 
     // window.location.href = "/";
   };
 
