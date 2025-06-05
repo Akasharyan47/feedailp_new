@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = "https://feedailp-backend-api.onrender.com/api";
 
 export const DropdownWithCategories = ({ onDataSelected }) => {
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -20,7 +20,7 @@ export const DropdownWithCategories = ({ onDataSelected }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE_URL}/service-types`)
+      .get(`${API_BASE_URL}/service_types`)
       .then((res) => {
         if (res.data.status === "success") {
           setServiceTypes(res.data.data);
