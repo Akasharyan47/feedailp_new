@@ -62,7 +62,14 @@ const PostReviews = () => {
 
   // Validate form fields
   const validateForm = () => {
-    if (!yesnodata) {
+       if (!selectedProduct) {
+      showMessage("Please select product");
+    } else if (!district) {
+      setDistrictError("Please enter a pincode");
+      showMessage("Please enter a pincode");
+    } else if (!rating) {
+      showMessage("Please provide a rating");
+    } else if  (!yesnodata) {
       showMessage("Please answer YES or NO questions");
       return false;
     } 
