@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { ThemeProvider } from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Component/Home/Home";
@@ -13,7 +14,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Container from "react-bootstrap/Container";
-
+const API_BASE_URL = "https://feedailp-backend-api.onrender.com/api";
 function App() {
   const [showBanner, setShowBanner] = useState(true);
 
@@ -30,6 +31,18 @@ function App() {
     },
     media: { mobile: "568px", tab: "600px" },
   };
+  useEffect(() => {
+    axios
+      .get(`${API_BASE_URL}/service_types`)
+       .then((res) => {
+        if (res.data.status === "success") {
+          // console.log("Service Types:", res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching service types:", err);
+      });
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId="676303343264-oa0h9gmmf0sf9uvtqnh0popck4f7bfa8.apps.googleusercontent.com">
