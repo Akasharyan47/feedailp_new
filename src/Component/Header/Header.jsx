@@ -17,7 +17,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [isModalOpen, setIsModalOpen] = useState(false); 
- console.log(username)
+ 
   useEffect(() => {
     const fullName = Cookies.get("displayName");
     if (fullName) {

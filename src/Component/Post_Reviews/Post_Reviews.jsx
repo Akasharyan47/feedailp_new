@@ -17,7 +17,7 @@ import { DropdownWithCategories } from "../Company/Company";
 import GmailAddressModal from "../Auth/index";
 import Image_post_review from "../../IMAGE/postReview/Image_post_review.png";
 import Cookies from "js-cookie";
- 
+ import axios from "axios";
 import shield_610309 from "../../IMAGE/postReview/shield_610309.png";
 
 const PostReviews = () => {
@@ -28,6 +28,8 @@ const PostReviews = () => {
   const [districtError, setDistrictError] = useState("");
   const [rating, setRating] = useState(null);
   const [yesnodata, setYesNoData] = useState(null);
+  const [reviewText, setReviewText] = useState("");
+
 
   const [state, setState] = useState({
     open: false,
@@ -36,7 +38,7 @@ const PostReviews = () => {
     message: " ",
   });
 
-  const { vertical, horizontal, open, message } = state;
+  const { vertical, horizontal, open, message  } = state;
   const [successVisible, setSuccessVisible] = useState(false);
 
   const showMessage = (msg) => {
@@ -75,36 +77,66 @@ const PostReviews = () => {
     } 
     return true;
   };
-
  
-  const submitForm = () => {
-     if (!selectedProduct) {
-      showMessage("Please select product");
-    } else if (!district) {
-      setDistrictError("Please enter a pincode");
-      showMessage("Please enter a pincode");
-    } else if (!rating) {
-      showMessage("Please provide a rating");
-    } else if (  yesnodata) {
-      const Data = {
-         product: selectedProduct,
-         District: district,
-         Star_Ratings: rating,
-        Yes_No: yesnodata,
-      };
-      console.log("Form submitted:", Data);
-     
-      setSuccessVisible(true);
 
-     
+const submitForm = async () => {
+  if (!selectedProduct) {
+    showMessage("Please select a product");
+    return;
+  }
+
+  if (!district) {
+    setDistrictError("Please enter a pincode");
+    showMessage("Please enter a pincode");
+    return;
+  }
+
+  if (!rating || rating.length === 0) {
+    showMessage("Please provide a rating");
+    return;
+  }
+
+  if (!yesnodata || yesnodata.length === 0) {
+    showMessage("Please answer all Yes/No questions");
+    return;
+  }
+
+  // ✅ Prepare data
+  const Data = {
+    product: selectedProduct,
+    District: district,
+    Star_Ratings: rating,
+    Yes_No: yesnodata,
+    reviewText: reviewText,
+    email: Cookies.get("email") || "anonymous",
+    name: Cookies.get("displayName") || "Anonymous User",
+    id: Cookies.get("fduser") || "anonymous", 
+
+  };
+
+  console.log("Form submitted:", Data);
+
+  try {
+    // ✅ Send data to Flask API which saves it to Firebase
+    const res = await axios.post("http://localhost:5000/api/submit_review", Data);
+
+    if (res.data.status === "success") {
+      setSuccessVisible(true);
+      showMessage("Review submitted successfully!");
+
+      // ⏳ Redirect after delay
       setTimeout(() => {
-        setSuccessVisible(false); 
+        setSuccessVisible(false);
         window.location.href = "/";
       }, 3000);
     } else {
-      showMessage("Please fill all required fields");
+      showMessage("Something went wrong. Try again.");
     }
-  };
+  } catch (error) {
+    console.error("Submission error:", error);
+    showMessage("Submission failed. Please try again.");
+  }
+};
 
  
   const handleContinue = () => {
@@ -237,25 +269,29 @@ const PostReviews = () => {
         <StarRatingInput ratingUpdate={setRating} YesNoData={setYesNoData} />
       </Container>
 
-      <Grid container maxWidth="xl" className=" justify-content-center ">
-        <Grid className=" justify-content-center WYR  mb-4">
-          <Typography>*Write your review</Typography>
+      <Grid container maxWidth="xl" className="justify-content-center">
+      <Grid className="justify-content-center WYR mb-4">
+        <Typography>*Write your review</Typography>
 
-          <TextField
-            multiline
-            placeholder="review ... !"
-            fullWidth
-            rows={3}
-            inputProps={{ maxLength: 200 }}
-            InputProps={{
-              style: {
-                fontFamily: "system-ui",
-                fontWeight: "normal",
-              },
-            }}
-            // onChange={handleAddressChange}
-          />
-        </Grid>
+        <TextField
+          multiline
+          placeholder="review ... !"
+          fullWidth
+          rows={3}
+          inputProps={{ maxLength: 200 }}
+          value={reviewText}
+          onChange={(e) => {
+            setReviewText(e.target.value);
+            console.log("Your review:", e.target.value); // 👈 Direct console output
+          }}
+          InputProps={{
+            style: {
+              fontFamily: "system-ui",
+              fontWeight: "normal",
+            },
+          }}
+        />
+      </Grid> 
       </Grid>
 
       <Box component="footer">
