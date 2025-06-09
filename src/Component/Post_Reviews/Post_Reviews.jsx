@@ -122,7 +122,7 @@ const submitForm = async () => {
 
     if (res.data.status === "success") {
       setSuccessVisible(true);
-      showMessage("Review submitted successfully!");
+      // showMessage("Review submitted successfully!");
 
       // ⏳ Redirect after delay
       setTimeout(() => {
