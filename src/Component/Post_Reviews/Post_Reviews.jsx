@@ -118,7 +118,7 @@ const submitForm = async () => {
 
   try {
     // ✅ Send data to Flask API which saves it to Firebase
-    const res = await axios.post("http://localhost:5000/api/submit_review", Data);
+    const res = await axios.post("https://feedailp-backend-api.onrender.com/api/submit_review", Data);
 
     if (res.data.status === "success") {
       setSuccessVisible(true);
