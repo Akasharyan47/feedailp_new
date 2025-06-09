@@ -17,8 +17,9 @@ export const DropdownWithCategories = ({ onDataSelected }) => {
   const [selectedServiceType, setSelectedServiceType] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+const [loadingServices, setLoadingServices] = useState(false);
   useEffect(() => {
+    setLoadingServices(true);
     axios
       .get(`${API_BASE_URL}/service_types`)
       .then((res) => {
@@ -26,7 +27,8 @@ export const DropdownWithCategories = ({ onDataSelected }) => {
           setServiceTypes(res.data.data);
         }
       })
-      .catch((err) => console.error("Error fetching service types:", err));
+      .catch((err) => console.error("Error fetching service types:", err))
+      .finally(() => setLoadingServices(false));
   }, []);
 
   useEffect(() => {
