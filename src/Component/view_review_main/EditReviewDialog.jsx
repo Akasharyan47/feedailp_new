@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   AppBar,
   Toolbar,
-  IconButton,TableHead,
-  Typography,MenuItem,
-  Box,Table,TableBody,TableRow,
-  Button,TableContainer,Checkbox,
-  TextField,FormControlLabel,
-  Slide,TableCell
+  IconButton,
+  Typography,
+  Box,
+  TextField,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Slide,
+  Button,
+  Grid,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -17,19 +27,51 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const EditReviewDialog = ({ open, onClose, onSave, review }) => {
-  const [editedReview, setEditedReview] = useState({ ...review });
+  const [editedReview, setEditedReview] = useState({});
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    if (review) {
+      setEditedReview({ ...review });
+    }
+  }, [review]);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEditedReview((prevReview) => ({
-      ...prevReview,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    const { name, value } = e.target;
+
+    if (name.startsWith('service_experience.')) {
+      const field = name.split('.')[1];
+      setEditedReview((prev) => ({
+        ...prev,
+        service_experience: {
+          ...prev.service_experience,
+          [field]: value === 'true' ? true : value === 'false' ? false : value
+        }
+      }));
+    } else {
+      setEditedReview((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleSave = () => {
-    onSave(editedReview);
-    onClose();
+  const handleSave = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/update_review_bp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedReview)
+      });
+
+      const result = await res.json();
+      if (result.status === 'success') {
+        onSave(editedReview);
+        onClose();
+      } else {
+        console.error('Save failed:', result.message);
+      }
+    } catch (err) {
+      console.error('API error while saving:', err);
+    }
   };
 
   return (
@@ -39,7 +81,7 @@ const EditReviewDialog = ({ open, onClose, onSave, review }) => {
           <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
             <CloseIcon />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
             Edit Review
           </Typography>
           <Button autoFocus color="inherit" onClick={handleSave}>
@@ -47,120 +89,120 @@ const EditReviewDialog = ({ open, onClose, onSave, review }) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box p={3}>
-        {/* Display the form with selected review data for editing */}
-        <TextField
-          label="ID"
-          name="id"
-          type="number"
-          value={editedReview.id}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="User"
-          name="user"
-          value={editedReview.user}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Rating"
-          name="rating"
-          type="number"
-          value={editedReview.rating}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Comment"
-          name="comment"
-          value={editedReview.comment}
-          onChange={handleInputChange}
-          fullWidth
-          multiline
-          rows={4}
-          margin="normal"
-        />
-        <TextField
-          label="Date"
-          name="date"
-          type="date"
-          value={editedReview.date}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Company"
-          name="company"
-          value={editedReview.company}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Product"
-          name="product"
-          value={editedReview.product}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
 
-        {/* Render service_experience questions dynamically */}
-        <h3>Service Experience:</h3>
-        <TableContainer  >
-          <Table>
+      <Box sx={{ p: 3 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="User"
+              name="user"
+              value={editedReview.user || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <TextField
+              label="Rating"
+              name="rating"
+              type="number"
+              value={editedReview.rating || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+              inputProps={{ min: 1, max: 5 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Date"
+              name="date"
+              type="date"
+              value={editedReview.date || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Comment"
+              name="comment"
+              value={editedReview.comment || ''}
+              onChange={handleInputChange}
+              fullWidth
+              multiline
+              rows={4}
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Company"
+              name="company"
+              value={editedReview.company || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Product"
+              name="product"
+              value={editedReview.product || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+        </Grid>
+
+        <Typography variant="h6" mt={4}>
+          Service Experience
+        </Typography>
+        <TableContainer sx={{ mt: 2 }}>
+          <Table size={isMobile ? 'small' : 'medium'}>
             <TableHead>
               <TableRow>
                 <TableCell>Question</TableCell>
-                <TableCell>Value</TableCell>
+                <TableCell>Answer</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-  {Object.entries(editedReview.service_experience).map(([key, value]) => (
-    <TableRow key={key}>
-      <TableCell>{key.replace(/_/g, ' ')}</TableCell>
-      <TableBody>
-  {Object.entries(editedReview.service_experience).map(([key, value]) => (
-    <TableRow key={key}>
-      <TableCell>{key.replace(/_/g, ' ')}</TableCell>
-      <TableCell>
-        {typeof value === 'boolean' ? (
-          <TextField
-            select
-            name={`service_experience.${key}`}
-            value={value.toString()}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          >
-            <MenuItem value="true">True</MenuItem>
-            <MenuItem value="false">False</MenuItem>
-          </TextField>
-        ) : (
-          <TextField
-            name={`service_experience.${key}`}
-            type="number"
-            value={value.toString()}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
-        )}
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
-
-    </TableRow>
-  ))}
-</TableBody>
-
+              {editedReview.service_experience &&
+                Object.entries(editedReview.service_experience).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell>{key.replace(/_/g, ' ')}</TableCell>
+                    <TableCell>
+                      {typeof value === 'boolean' ? (
+                        <TextField
+                          select
+                          name={`service_experience.${key}`}
+                          value={value.toString()}
+                          onChange={handleInputChange}
+                          fullWidth
+                        >
+                          <MenuItem value="true">True</MenuItem>
+                          <MenuItem value="false">False</MenuItem>
+                        </TextField>
+                      ) : (
+                        <TextField
+                          name={`service_experience.${key}`}
+                          value={value}
+                          onChange={handleInputChange}
+                          fullWidth
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>

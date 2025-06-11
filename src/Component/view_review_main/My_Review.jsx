@@ -1,17 +1,21 @@
-// FullScreenDialog.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Dialog,
   AppBar,
-  Toolbar,useTheme,  useMediaQuery,
-  Slide,
+  Toolbar,
   IconButton,
   Typography,
   Box,
+  Slide,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
 import ReviewTable from './My_ReviewTable';
 import EditReviewDialog from './EditReviewDialog';
 
@@ -19,35 +23,31 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const initialReviewData = {
-  id: 2,
-  user: 'User2',
-  rating: 3,
-  comment:
-    'Another extensive comment with 20 lines of text. It delves into various aspects of the product, offering a nuanced perspective.  that adds depth to the user reviews.',
-  date: '2022-01-19',
-  company: 'Company B',
-  product: 'Product Y',
-  service_experience: {
-    rating_professionalism_friendliness: "4",
-    rating_knowledge_skills: 3,
-    rating_service_quality: 2,
-    pricing_reasonable: true,
-    price_more_than_actual_amount: false,
-    issue_resolved_within_time_frame: true,
-    informed_about_additional_charges: true,
-    clear_and_accurate_information: true,
-    knowledgeable_representative: true,
-    service_resolved_issues: false,
-  },
-};
-
 const FullScreenDialog = () => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [open, setOpen] = useState(false);
-  const [reviews, setReviews] = useState([initialReviewData]);
+  const [reviews, setReviews] = useState([]);
   const [selectedReview, setSelectedReview] = useState(null);
+
+  const email = Cookies.get('email');
+
+  // 🔄 Fetch reviews for the logged-in user
+  const fetchUserReviews = async () => {
+    if (!email) return;
+
+    try {
+      const res = await axios.get(`http://localhost:5000//api/user_reviews?email=${email}`);
+      setReviews(res.data.reviews || []);
+    } catch (err) {
+      console.error('Failed to fetch reviews:', err);
+    }
+  }
+
+  useEffect(() => {
+    if (open) fetchUserReviews();
+  }, [open]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,84 +55,88 @@ const FullScreenDialog = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setSelectedReview(null);
   };
 
   const handleEditReview = (review) => {
     setSelectedReview(review);
-    handleClickOpen(); // Open the dialog
   };
 
-  const handleDeleteReview = (reviewId) => {
-    setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
-    console.log('Delete review with ID:', reviewId);
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      // 🔥 Optionally call backend delete API
+      // await axios.delete(`/api/delete_review?email=${email}&product_id=${reviewId}`);
+
+      setReviews((prev) => prev.filter((r) => r.product_id !== reviewId));
+      console.log(`Deleted review for product_id: ${reviewId}`);
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
   };
 
-  const handleSaveEdit = (editedReview) => {
-    // Implement logic to save the edited review
-    // Update the reviews state or make an API call to update the data
-    console.log('Save edited review:', editedReview);
-    setReviews((prevReviews) =>
-      prevReviews.map((review) => (review.id === editedReview.id ? editedReview : review))
+  const handleSaveEdit = async (editedReview) => {
+    // 🔥 Optionally send update to backend here
+    // await axios.put('/api/edit_review', editedReview);
+
+    setReviews((prev) =>
+      prev.map((r) =>
+        r.product_id === editedReview.product_id ? editedReview : r
+      )
     );
     setSelectedReview(null);
-    handleClose(); // Close the dialog after saving
+    handleClose();
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button
         variant="contained"
         endIcon={<StarIcon />}
-        size={isSmallScreen ? "small" : "medium"}
-        sx={{ background: '#006fbe'  }}
+        size={isSmallScreen ? 'small' : 'medium'}
+        sx={{ backgroundColor: '#006fbe' }}
         onClick={handleClickOpen}
       >
         My Review
       </Button>
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
+            <IconButton edge="start" color="inherit" onClick={handleClose}>
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
               My Review
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button color="inherit" onClick={handleClose}>
               Save
             </Button>
           </Toolbar>
         </AppBar>
-        <Box>
-          {/* Conditional rendering based on whether a review is selected or not */}
+
+        <Box p={2}>
           {selectedReview ? (
             <EditReviewDialog
-              open={open}
-              onClose={() => {
-                setSelectedReview(null);
-                handleClose();
-              }}
+              open={!!selectedReview}
+              onClose={handleClose}
               onSave={handleSaveEdit}
               review={selectedReview}
             />
           ) : (
-            <div>
-              {/* Display reviews in the table */}
-              <ReviewTable
-                reviews={reviews}
-                onEdit={handleEditReview}
-                onDelete={handleDeleteReview}
-              />
-            </div>
+            <ReviewTable
+              reviews={reviews}
+              onEdit={handleEditReview}
+              onDelete={handleDeleteReview}
+            />
           )}
         </Box>
       </Dialog>
-    </React.Fragment>
+    </>
   );
 };
 
