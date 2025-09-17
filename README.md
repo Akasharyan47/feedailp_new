@@ -2,6 +2,9 @@
 
 A comprehensive service experience review portal where users can share and explore reviews about companies' services in their local area. This platform helps consumers make informed decisions by providing authentic reviews before purchasing products or services.
 
+![Feedailp Screenshot](https://github.com/Akasharyan47/feedailp_new/blob/main/public/Screenshot%202025-09-17%20150814.png)
+
+
 ## Features
 
 - **Post Reviews**: Users can submit detailed reviews including company selection, location (pincode), star ratings, yes/no questions, and written feedback
