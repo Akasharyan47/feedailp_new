@@ -112,7 +112,7 @@ const Typograph = {
                                 </Link>
                                 <Link underline="none" className='d-block'>
                                     <HoverButton  >
-                                        feedailp@gmail.com
+                                        akasharyan.aryan@gmail.com
                                     </HoverButton>
                                 </Link>
                                 <Link underline="none" className='d-block'>
@@ -130,18 +130,22 @@ const Typograph = {
                             display="flex" 
                              
                             sx={{ gap: '10px', width: 'min-content',color:"#b9b7b7" }} >
-                            <Link   >
+                            <Link>
                                 <FacebookIcon  fontSize='small'  />
                             </Link>
-                            <Link   >
+                            <Link>
                                 <TwitterIcon   fontSize='small'  />
                             </Link>
                             <Link   >
                                 <InstagramIcon  fontSize='small'  />
                             </Link>
-                            <Link   >
-                                <LinkedInIcon  fontSize='small' />
-                            </Link>
+                           <Link
+                               href="https://www.linkedin.com/in/akash-aaryan-690008210/"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                              <LinkedInIcon fontSize="small" />
+                           </Link>
+
                         </Box>
                     </Grid> */}
                 </Grid>
